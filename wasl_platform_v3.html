@@ -71,6 +71,7 @@
             </div>
             <span id="userRole" class="role-badge role-exp"></span>
             <span id="userName" class="text-sm font-semibold text-slate-700"></span>
+                <button onclick="resetLocalStorage()" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-xl font-bold text-xs transition-all">Reset</button>
             <button onclick="logout()" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-xl font-bold text-xs transition-all">Déconnexion</button>
         </div>
     </div>
@@ -477,6 +478,7 @@ function genDeclValeur(ref){const m=gM().find(x=>x.ref===ref);if(!m)return;showD
 function openModal(id){document.getElementById(id).classList.add('active');document.body.style.overflow='hidden';}
 function closeModal(id){document.getElementById(id).classList.remove('active');document.body.style.overflow='';}
 function switchModal(a,b){closeModal(a);setTimeout(function(){openModal(b);},200);}
+function resetLocalStorage(){if(confirm('⚠️ Réinitialiser toutes les données ?')){localStorage.clear();location.reload();}}
 function handleDemande(e){e.preventDefault();const fc=document.getElementById('dFromCity').value,dept=getDept(fc);
 const m={ref:'WASL-'+Date.now().toString().slice(-6),expediteurId:CU?.id,expediteurNom:CU.prenom+' '+CU.nom,type:document.getElementById('dType').value,fromCity:fc,fromAddr:document.getElementById('dFromAddr').value,dest:{code:document.getElementById('dDestCode').value,nom:document.getElementById('dDestNom').value,addr1:document.getElementById('dDestAddr1').value,addr2:document.getElementById('dDestAddr2').value,cp:document.getElementById('dDestCP').value,ville:document.getElementById('dDestVille').value,region:document.getElementById('dDestRegion').value,pays:document.getElementById('dDestPays').value,tel:document.getElementById('dDestTel').value,email:document.getElementById('dDestEmail').value,motDir:document.getElementById('dDestMotDir').value,contact:document.getElementById('dDestContact').value},departement:dept,nature:document.getElementById('dNature').value,um:parseInt(document.getElementById('dUM').value)||0,poids:parseFloat(document.getElementById('dPoids').value)||0,longueur:parseFloat(document.getElementById('dLongueur').value)||0,volume:parseFloat(document.getElementById('dVolume').value)||0,valeur:parseFloat(document.getElementById('dValeur').value)||0,devise:document.getElementById('dDevise').value,numBL:document.getElementById('dNumBL').value,refDest:document.getElementById('dRefDest')?.value||'',date:document.getElementById('dDate').value,instructions:document.getElementById('dInstructions').value,remarques:document.getElementById('dRemarques').value,status:'pending',offres:[],devis:[],devisChoisi:null,transporteurId:null,transporteurNom:null,prixT:null,prixC:null,livraison:null,rejetMotif:null,factureEmise:false};
 if(!dept){const d=prompt('Ville non reconnue. Code département (ex: 64):');if(d)m.departement=d;else{alert('Département requis');return;}}
