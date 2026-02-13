@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WASL Transport — Plateforme Professionnelle</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="bg-slate-50 text-slate-800">
+
+<!-- ════════════════════════════════════════════════════════
+     NAVBAR
+     ════════════════════════════════════════════════════════ -->
+<nav id="navbar" class="fixed top-0 w-full z-50">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 bg-gradient-to-br from-blue-600 to-blue-700 rounded-xl flex items-center justify-center text-white font-black text-lg shadow-lg shadow-blue-600/30">W</div>
+            <span id="navBrand" class="text-xl font-black text-white tracking-tight">WASL <span class="text-blue-400">Transport</span></span>
+        </div>
+        <div id="navPublic" class="flex items-center gap-3">
+            <button onclick="openModal('loginModal')" class="px-5 py-2.5 rounded-xl font-bold text-sm text-white/80 hover:text-white border border-white/20 hover:border-white/40 transition-all backdrop-blur-sm">Connexion</button>
+            <button onclick="openModal('registerModal')" class="px-5 py-2.5 rounded-xl font-bold text-sm text-white bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 shadow-lg shadow-blue-600/30 transition-all hover:shadow-xl hover:-translate-y-0.5">Inscription</button>
+        </div>
+        <div id="navConnected" class="hidden items-center gap-3">
+            <div id="roleSwitcher" class="hidden flex items-center gap-1 bg-white/10 backdrop-blur rounded-xl p-1">
+                <button onclick="switchActiveRole('expediteur')" id="rsExp" class="px-3 py-1.5 rounded-lg text-xs font-bold transition">&#x1F4E6; Exp&eacute;diteur</button>
+                <button onclick="switchActiveRole('transporteur')" id="rsTrans" class="px-3 py-1.5 rounded-lg text-xs font-bold transition">&#x1F69B; Transporteur</button>
+            </div>
+            <span id="userRole" class="role-badge role-exp"></span>
+            <span id="userName" class="text-sm font-semibold text-slate-700"></span>
+            <button onclick="logout()" class="px-4 py-2 bg-red-50 hover:bg-red-100 text-red-600 rounded-xl font-bold text-xs transition-all border border-red-200">D&eacute;connexion</button>
+        </div>
+    </div>
+</nav>
+
+<!-- ════════════════════════════════════════════════════════
+     HERO
+     ════════════════════════════════════════════════════════ -->
+<section id="heroSection" class="hero-gradient min-h-screen flex items-center relative">
+    <div class="floating-dot" style="top:18%;left:8%;animation-delay:0s"></div>
+    <div class="floating-dot" style="top:55%;left:88%;animation-delay:2s"></div>
+    <div class="floating-dot" style="top:75%;left:25%;animation-delay:4s"></div>
+    <div class="floating-dot" style="top:35%;left:72%;animation-delay:1s"></div>
+    <div class="floating-dot" style="top:85%;left:60%;animation-delay:3s"></div>
+
+    <div class="max-w-7xl mx-auto px-6 py-32 relative z-10 w-full">
+        <div class="grid lg:grid-cols-2 gap-16 items-center">
+            <div>
+                <div class="inline-flex items-center gap-2 bg-blue-500/12 text-blue-300 px-4 py-2 rounded-full text-xs font-bold mb-6 backdrop-blur-sm border border-blue-400/15" style="font-size:10px;letter-spacing:2px;text-transform:uppercase">
+                    <span class="w-2 h-2 bg-emerald-400 rounded-full pulse-dot"></span>
+                    Commissionnaire de Transport
+                </div>
+                <h1 class="text-5xl lg:text-6xl font-black text-white leading-tight mb-6">
+                    Exp&eacute;diez.<br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-300 to-blue-400">Simplement.</span>
+                </h1>
+                <p class="text-lg text-slate-300 mb-10 leading-relaxed max-w-lg">
+                    Connectez exp&eacute;diteurs et transporteurs en quelques clics. Suivi temps r&eacute;el, devis instantan&eacute;s, documents automatis&eacute;s.
+                </p>
+                <div class="flex flex-wrap gap-4">
+                    <button onclick="openModal('registerModal')" class="px-8 py-4 rounded-2xl font-bold text-lg text-white bg-gradient-to-r from-blue-600 to-blue-700 shadow-xl shadow-blue-600/30 transition-all hover:shadow-2xl hover:-translate-y-1">
+                        Cr&eacute;er un compte &rarr;
+                    </button>
+                    <button onclick="openModal('loginModal')" class="px-8 py-4 rounded-2xl font-bold text-lg text-white bg-white/8 border border-white/20 hover:bg-white/15 transition-all backdrop-blur-sm">
+                        Se connecter
+                    </button>
+                </div>
+                <!-- Trust bar -->
+                <div class="mt-14 flex items-center gap-8">
+                    <div class="text-center"><div class="text-2xl font-black text-white">5,000+</div><div class="text-xs text-slate-400 mt-0.5">Exp&eacute;ditions</div></div>
+                    <div class="w-px h-10 bg-white/15"></div>
+                    <div class="text-center"><div class="text-2xl font-black text-white">350+</div><div class="text-xs text-slate-400 mt-0.5">Transporteurs</div></div>
+                    <div class="w-px h-10 bg-white/15"></div>
+                    <div class="text-center"><div class="text-2xl font-black text-white">99.8%</div><div class="text-xs text-slate-400 mt-0.5">Satisfaction</div></div>
+                </div>
+            </div>
+            <!-- Right: Tracking card -->
+            <div class="hidden lg:block">
+                <div class="bg-white/8 backdrop-blur-xl rounded-3xl p-8 border border-white/15 shadow-2xl">
+                    <div class="flex items-center gap-2.5 mb-6">
+                        <div class="w-3 h-3 rounded-full bg-red-400/80"></div>
+                        <div class="w-3 h-3 rounded-full bg-yellow-400/80"></div>
+                        <div class="w-3 h-3 rounded-full bg-green-400/80"></div>
+                        <span class="text-xs text-slate-500 ml-2 font-medium">WASL Tracking</span>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-full bg-emerald-500/20 flex items-center justify-center text-emerald-400">&#x2713;</div>
+                            <div><div class="text-white font-bold text-sm">Collect&eacute; &agrave; Paris</div><div class="text-slate-400 text-xs">Aujourd'hui 08:30</div></div>
+                        </div>
+                        <div class="ml-5 w-px h-6 bg-blue-500/40"></div>
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 animate-pulse">&#x1F69B;</div>
+                            <div><div class="text-white font-bold text-sm">En transit &mdash; A6</div><div class="text-slate-400 text-xs">ETA: 14:00</div></div>
+                        </div>
+                        <div class="ml-5 w-px h-6 bg-slate-700"></div>
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-full bg-slate-700/60 flex items-center justify-center text-slate-500">&#x25CB;</div>
+                            <div><div class="text-slate-400 font-bold text-sm">Livraison Lyon</div><div class="text-slate-500 text-xs">Pr&eacute;vu 15:30</div></div>
+                        </div>
+                    </div>
+                    <div class="mt-6 pt-6 border-t border-white/10 flex justify-between items-center">
+                        <span class="text-slate-400 text-sm">Montant HT</span>
+                        <span class="text-2xl font-black text-white">847 &euro;</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Suivi public -->
+        <div id="suiviPublic" class="mt-16"></div>
+    </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════
+     FEATURES
+     ════════════════════════════════════════════════════════ -->
+<section id="featuresSection" class="features-section py-24 bg-white">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="text-center mb-16">
+            <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:3px;color:var(--accent);margin-bottom:8px">Pourquoi nous choisir</div>
+            <h2 class="text-4xl font-black text-slate-900">Tout ce dont vous avez besoin</h2>
+        </div>
+        <div class="grid md:grid-cols-3 gap-8">
+            <div class="feature-card">
+                <div class="feature-icon bg-blue-50">&#x1F4E6;</div>
+                <h3 class="text-lg font-bold text-slate-900 mb-3">Exp&eacute;dition simplifi&eacute;e</h3>
+                <p class="text-slate-500 text-sm leading-relaxed">Cr&eacute;ez votre demande en 2 minutes. Notre algorithme trouve les meilleurs transporteurs.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon bg-emerald-50">&#x1F4CD;</div>
+                <h3 class="text-lg font-bold text-slate-900 mb-3">Suivi temps r&eacute;el</h3>
+                <p class="text-slate-500 text-sm leading-relaxed">Suivez chaque &eacute;tape avec des mises &agrave; jour en temps r&eacute;el et preuves de livraison photo.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon bg-purple-50">&#x1F4C4;</div>
+                <h3 class="text-lg font-bold text-slate-900 mb-3">Documents auto</h3>
+                <p class="text-slate-500 text-sm leading-relaxed">CMR, factures, d&eacute;clarations de valeur g&eacute;n&eacute;r&eacute;s automatiquement.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════
+     DASHBOARD EXPEDITEUR
+     ════════════════════════════════════════════════════════ -->
+<section id="dashboardExp" class="dashboard-section pt-24 pb-12 min-h-screen bg-slate-50">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="flex justify-between items-center mb-8">
+            <div>
+                <h1 class="text-2xl font-black text-slate-900">Mon Espace Exp&eacute;diteur</h1>
+                <p class="text-slate-500 text-sm mt-1">G&eacute;rez vos exp&eacute;ditions</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <button onclick="openProfilPage()" class="px-4 py-2.5 bg-white border border-slate-200 text-slate-700 rounded-xl font-bold text-sm hover:border-blue-300 hover:shadow transition-all">&#x1F464; Mon Profil</button>
+                <button onclick="openModal('demandeModal')" class="px-6 py-2.5 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-xl font-bold text-sm shadow-lg shadow-blue-600/25 hover:-translate-y-0.5 transition-all">+ Nouvelle demande</button>
+            </div>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-6 gap-4 mb-8" id="expStats"></div>
+        <div class="flex gap-2 mb-6 border-b border-slate-200">
+            <button onclick="showExpTab('expeditions')" id="expTabExp" class="tab-btn active">&#x1F4E6; Exp&eacute;ditions</button>
+            <button onclick="showExpTab('documents')" id="expTabDocs" class="tab-btn">&#x1F4C4; Documents</button>
+        </div>
+        <div id="expTabExpContent">
+            <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+                <div class="p-5 border-b border-slate-100 flex flex-col md:flex-row gap-3 items-center justify-between">
+                    <div class="flex gap-1.5 flex-wrap" id="expFilterBtns"></div>
+                    <div class="relative w-full md:w-64">
+                        <input type="text" id="expSearch" oninput="renderExpList()" placeholder="Rechercher..." class="inp pl-10">
+                        <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 text-sm">&#x1F50D;</span>
+                    </div>
+                </div>
+                <div id="expList" class="divide-y divide-slate-100"></div>
+                <div id="expPag" class="p-4 border-t border-slate-100 flex items-center justify-between hidden">
+                    <span class="text-xs text-slate-400 font-medium" id="expPagInfo"></span>
+                    <div class="flex gap-1">
+                        <button onclick="expPg--;renderExpList()" id="expPrev" class="px-3 py-1.5 rounded-lg border border-slate-200 text-xs font-bold disabled:opacity-40 hover:bg-slate-50 transition" disabled>&larr;</button>
+                        <button onclick="expPg++;renderExpList()" id="expNext" class="px-3 py-1.5 rounded-lg border border-slate-200 text-xs font-bold disabled:opacity-40 hover:bg-slate-50 transition">&rarr;</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="expTabDocsContent" class="hidden">
+            <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+                <div class="p-5 border-b border-slate-100"><h2 class="text-lg font-bold text-slate-900">Mes Documents</h2></div>
+                <div id="expDocsList"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════
+     DASHBOARD TRANSPORTEUR
+     ════════════════════════════════════════════════════════ -->
+<section id="dashboardTrans" class="dashboard-section pt-24 pb-12 min-h-screen bg-slate-50">
+    <div class="max-w-7xl mx-auto px-6">
+        <div id="transPendingBanner" class="hidden mb-6 p-6 bg-gradient-to-r from-purple-50 to-indigo-50 border-2 border-purple-200 rounded-2xl">
+            <div class="flex items-center gap-4">
+                <div class="text-4xl">&#x1F512;</div>
+                <div>
+                    <h3 class="font-bold text-purple-900 text-lg">Compte en attente de validation</h3>
+                    <p class="text-purple-700 text-sm">Compl&eacute;tez votre dossier de conformit&eacute;.</p>
+                    <button onclick="openModal('conformityModal')" class="mt-3 px-5 py-2.5 bg-purple-600 text-white rounded-xl font-bold text-sm hover:bg-purple-700 transition">&#x1F4CB; Remplir le dossier</button>
+                </div>
+            </div>
+        </div>
+        <div id="transActiveContent">
+            <div class="flex justify-between items-center mb-8">
+                <div>
+                    <h1 class="text-2xl font-black text-slate-900">Mon Espace Transporteur</h1>
+                    <p class="text-slate-500 text-sm mt-1">Missions et gestion TMS</p>
+                </div>
+                <button onclick="openProfilPage()" class="px-4 py-2.5 bg-white border border-slate-200 text-slate-700 rounded-xl font-bold text-sm hover:border-emerald-300 hover:shadow transition-all">&#x1F464; Mon Profil</button>
+            </div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8" id="transStats"></div>
+            <div class="flex gap-1 mb-6 border-b border-slate-200 overflow-x-auto">
+                <button onclick="showTransTab('available')" id="tTabAvail" class="tab-btn active">&#x1F514; Disponibles</button>
+                <button onclick="showTransTab('my')" id="tTabMy" class="tab-btn">&#x1F4CB; Mes missions</button>
+                <button onclick="showTransTab('tms')" id="tTabTms" class="tab-btn">&#x1F4CA; TMS</button>
+                <button onclick="showTransTab('chauffeurs')" id="tTabChauf" class="tab-btn">&#x1F464; Chauffeurs</button>
+                <button onclick="showTransTab('comptabilite')" id="tTabCompta" class="tab-btn">&#x1F4B6; Comptabilit&eacute;</button>
+            </div>
+            <div id="tAvailC"></div>
+            <div id="tMyC" class="hidden"></div>
+            <div id="tTmsC" class="hidden"></div>
+            <div id="tChaufC" class="hidden"></div>
+            <div id="tComptaC" class="hidden"></div>
+        </div>
+    </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════
+     DASHBOARD ADMIN
+     ════════════════════════════════════════════════════════ -->
+<section id="dashboardAdmin" class="dashboard-section pt-24 pb-12 min-h-screen bg-slate-50">
+    <div class="max-w-7xl mx-auto px-6">
+        <div class="flex items-center justify-between mb-8">
+            <h1 class="text-2xl font-black text-slate-900">Panel Administrateur</h1>
+            <button onclick="openProfilPage()" class="px-4 py-2.5 bg-white border border-slate-200 text-slate-700 rounded-xl font-bold text-sm hover:shadow transition-all">&#x1F464; Mon Profil</button>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-8" id="adminStats"></div>
+        <div class="flex gap-1 mb-6 border-b border-slate-200 overflow-x-auto">
+            <button onclick="showATab('users')" id="aTabUsers" class="tab-btn active">&#x1F465; Utilisateurs</button>
+            <button onclick="showATab('validation')" id="aTabValidation" class="tab-btn">&#x1F512; Conformit&eacute;</button>
+            <button onclick="showATab('offres')" id="aTabOffres" class="tab-btn">&#x1F4B0; Offres</button>
+            <button onclick="showATab('assign')" id="aTabAssign" class="tab-btn">&#x2705; Assignation</button>
+            <button onclick="showATab('livraisons')" id="aTabLivraisons" class="tab-btn">&#x1F4F7; Livraisons</button>
+            <button onclick="showATab('facturation')" id="aTabFacturation" class="tab-btn">&#x1F4B6; Facturation</button>
+            <button onclick="showATab('docs')" id="aTabDocs" class="tab-btn">&#x1F4C4; Documents</button>
+        </div>
+        <div id="aUsersC" class="a-tab"></div>
+        <div id="aValidationC" class="a-tab hidden"></div>
+        <div id="aOffresC" class="a-tab hidden"></div>
+        <div id="aAssignC" class="a-tab hidden"></div>
+        <div id="aLivraisonsC" class="a-tab hidden"></div>
+        <div id="aFacturationC" class="a-tab hidden"></div>
+        <div id="aDocsC" class="a-tab hidden"></div>
+    </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════
+     PAGE PROFIL
+     ════════════════════════════════════════════════════════ -->
+<section id="profilPage" class="dashboard-section pt-24 pb-12 min-h-screen bg-slate-50" style="display:none;">
+    <div class="max-w-3xl mx-auto px-6">
+        <div class="flex items-center justify-between mb-8">
+            <div><h1 class="text-2xl font-black text-slate-900">Mon Profil</h1><p class="text-slate-500 text-sm mt-1">G&eacute;rez vos informations</p></div>
+            <button onclick="closeProfilPage()" class="px-4 py-2.5 bg-white border border-slate-200 rounded-xl font-bold text-sm hover:bg-slate-50 transition">&larr; Retour</button>
+        </div>
+        <div class="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden">
+            <div class="bg-gradient-to-r from-blue-600 to-indigo-600 px-8 py-10 text-white text-center">
+                <div id="profilAvatar" class="w-20 h-20 bg-white/20 rounded-full mx-auto flex items-center justify-center text-3xl font-black mb-3 backdrop-blur-sm">JD</div>
+                <h2 id="profilFullName" class="text-xl font-bold">Jean Dupont</h2>
+                <div id="profilRoles" class="mt-2 flex justify-center gap-2"></div>
+            </div>
+            <form id="profilForm" class="p-8 space-y-6" onsubmit="saveProfile(event)">
+                <div class="border-b pb-4 mb-4">
+                    <h3 class="text-base font-bold text-slate-800 mb-4">&#x1F9D1; Identit&eacute;</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div><label class="lbl">Pr&eacute;nom</label><input type="text" id="profPrenom" class="inp"></div>
+                        <div><label class="lbl">Nom</label><input type="text" id="profNom" class="inp"></div>
+                        <div><label class="lbl">Soci&eacute;t&eacute;</label><input type="text" id="profSociete" class="inp" placeholder="Optionnel"></div>
+                        <div><label class="lbl">SIRET</label><input type="text" id="profSiret" class="inp" placeholder="Optionnel"></div>
+                    </div>
+                </div>
+                <div class="border-b pb-4 mb-4">
+                    <h3 class="text-base font-bold text-slate-800 mb-4">&#x1F4DE; Contact</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div><label class="lbl">Email</label><input type="email" id="profEmail" class="inp bg-slate-50" readonly><p class="text-xs text-slate-400 mt-1">Non modifiable</p></div>
+                        <div><label class="lbl">T&eacute;l&eacute;phone</label><input type="tel" id="profTel" class="inp"></div>
+                    </div>
+                </div>
+                <div class="border-b pb-4 mb-4">
+                    <h3 class="text-base font-bold text-slate-800 mb-4">&#x1F4CD; Adresse</h3>
+                    <div class="space-y-3">
+                        <div><label class="lbl">Adresse</label><input type="text" id="profAdresse" class="inp"></div>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div><label class="lbl">Code Postal</label><input type="text" id="profCP" class="inp"></div>
+                            <div><label class="lbl">Ville</label><input type="text" id="profVille" class="inp"></div>
+                        </div>
+                        <div><label class="lbl">Pays</label><input type="text" id="profPays" class="inp" value="France"></div>
+                    </div>
+                </div>
+                <div id="profilTransSection" class="border-b pb-4 mb-4" style="display:none;">
+                    <h3 class="text-base font-bold text-slate-800 mb-4">&#x1F69B; Infos Transporteur</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div><label class="lbl">Licence Transport</label><input type="text" id="profLicence" class="inp"></div>
+                        <div><label class="lbl">Immat. Tracteur</label><input type="text" id="profImmatTracteur" class="inp"></div>
+                        <div><label class="lbl">Immat. Remorque</label><input type="text" id="profImmatRemorque" class="inp"></div>
+                        <div><label class="lbl">T&eacute;l. 24/7</label><input type="tel" id="profTel247" class="inp"></div>
+                        <div><label class="lbl">D&eacute;partement</label><input type="text" id="profDepartement" class="inp"></div>
+                    </div>
+                </div>
+                <div class="border-b pb-4 mb-4">
+                    <h3 class="text-base font-bold text-slate-800 mb-4">&#x1F512; S&eacute;curit&eacute;</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div><label class="lbl">Nouveau mot de passe</label><input type="password" id="profNewPwd" class="inp" placeholder="Laisser vide"></div>
+                        <div><label class="lbl">Confirmer</label><input type="password" id="profConfirmPwd" class="inp" placeholder="Confirmer"></div>
+                    </div>
+                </div>
+                <div class="flex justify-end gap-3 pt-4">
+                    <button type="button" onclick="closeProfilPage()" class="px-6 py-3 bg-slate-100 text-slate-700 rounded-xl font-bold text-sm hover:bg-slate-200 transition">Annuler</button>
+                    <button type="submit" class="px-8 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl font-bold text-sm shadow-lg shadow-blue-600/25 hover:-translate-y-0.5 transition-all">&#x1F4BE; Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- ════════════════════════════════════════════════════════
+     MODALS
+     ════════════════════════════════════════════════════════ -->
+
+<!-- LOGIN -->
+<div id="loginModal" class="modal">
+    <div class="modal-content">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-xl font-black text-slate-900">&#x1F510; Connexion</h2>
+            <button onclick="closeModal('loginModal')" class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-400 transition">&times;</button>
+        </div>
+        <div class="demo-creds">
+            <div class="flex items-center gap-2 mb-2"><span class="text-lg">&#x1F3AF;</span><h3 class="font-black text-blue-900 text-sm">Comptes d&eacute;mo</h3></div>
+            <div class="cred-item" onclick="fillLogin('expediteur@wasl.fr','demo123')"><div class="flex justify-between"><div><div class="font-bold text-blue-900 text-xs">&#x1F4E6; Exp&eacute;diteur</div><div class="text-xs text-slate-500">expediteur@wasl.fr</div></div><div class="text-xs text-slate-400">demo123</div></div></div>
+            <div class="cred-item" onclick="fillLogin('transporteur@wasl.fr','demo123')"><div class="flex justify-between"><div><div class="font-bold text-emerald-900 text-xs">&#x1F69B; Transporteur (75)</div><div class="text-xs text-slate-500">transporteur@wasl.fr</div></div><div class="text-xs text-slate-400">demo123</div></div></div>
+            <div class="cred-item" onclick="fillLogin('transporteur2@wasl.fr','demo123')"><div class="flex justify-between"><div><div class="font-bold text-emerald-900 text-xs">&#x1F69B; Transporteur 2 (64)</div><div class="text-xs text-slate-500">transporteur2@wasl.fr</div></div><div class="text-xs text-slate-400">demo123</div></div></div>
+            <div class="cred-item" onclick="fillLogin('admin@wasl.fr','admin123')"><div class="flex justify-between"><div><div class="font-bold text-purple-900 text-xs">&#x2699;&#xFE0F; Admin</div><div class="text-xs text-slate-500">admin@wasl.fr</div></div><div class="text-xs text-slate-400">admin123</div></div></div>
+        </div>
+        <form onsubmit="handleLogin(event)" class="space-y-4">
+            <div><label class="lbl">Email</label><input type="email" id="loginEmail" required class="inp"></div>
+            <div><label class="lbl">Mot de passe</label><input type="password" id="loginPwd" required class="inp"></div>
+            <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-blue-600/25 hover:-translate-y-0.5 transition-all">Se connecter &rarr;</button>
+            <p class="text-center text-xs text-slate-500">Pas de compte ? <button type="button" onclick="switchModal('loginModal','registerModal')" class="text-blue-600 hover:underline font-bold">S'inscrire</button></p>
+        </form>
+    </div>
+</div>
+
+<!-- REGISTER -->
+<div id="registerModal" class="modal">
+    <div class="modal-content">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-xl font-black text-slate-900">&#x2728; Inscription</h2>
+            <button onclick="closeModal('registerModal')" class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-400 transition">&times;</button>
+        </div>
+        <form onsubmit="handleRegister(event)" class="space-y-4">
+            <div><label class="lbl">Type de compte *</label>
+                <div class="grid grid-cols-2 gap-3">
+                    <label class="cursor-pointer"><input type="radio" name="regRole" value="expediteur" checked class="peer sr-only" onchange="toggleRegFields()"><div class="p-4 border-2 border-slate-200 rounded-xl text-center peer-checked:border-blue-600 peer-checked:bg-blue-50 transition"><div class="text-2xl mb-1">&#x1F4E6;</div><div class="font-bold text-sm">Exp&eacute;diteur</div></div></label>
+                    <label class="cursor-pointer"><input type="radio" name="regRole" value="transporteur" class="peer sr-only" onchange="toggleRegFields()"><div class="p-4 border-2 border-slate-200 rounded-xl text-center peer-checked:border-emerald-600 peer-checked:bg-emerald-50 transition"><div class="text-2xl mb-1">&#x1F69B;</div><div class="font-bold text-sm">Transporteur</div></div></label>
+                </div>
+            </div>
+            <div class="grid grid-cols-2 gap-3"><div><label class="lbl">Pr&eacute;nom *</label><input type="text" name="prenom" required class="inp"></div><div><label class="lbl">Nom *</label><input type="text" name="nom" required class="inp"></div></div>
+            <div><label class="lbl">Email *</label><input type="email" name="email" required class="inp"></div>
+            <div><label class="lbl">T&eacute;l&eacute;phone</label><input type="tel" name="tel" class="inp"></div>
+            <div id="regDeptField" class="hidden"><label class="lbl">D&eacute;partement *</label><select name="departement" id="regDept" class="inp"></select></div>
+            <div><label class="lbl">Mot de passe *</label><input type="password" name="password" required minlength="6" class="inp"><p class="text-xs text-slate-400 mt-1">Min. 6 caract&egrave;res</p></div>
+            <button type="submit" class="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-blue-600/25 hover:-translate-y-0.5 transition-all">Cr&eacute;er mon compte &rarr;</button>
+        </form>
+    </div>
+</div>
+
+<!-- CONFORMITY -->
+<div id="conformityModal" class="modal"><div class="modal-content modal-lg">
+    <div class="flex justify-between items-center mb-6"><h2 class="text-xl font-black text-slate-900">&#x1F4CB; Dossier de conformit&eacute;</h2><button onclick="closeModal('conformityModal')" class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-400 transition">&times;</button></div>
+    <form onsubmit="submitConformity(event)" class="space-y-4">
+        <div class="section-title">&#x1F4DC; Informations l&eacute;gales</div>
+        <div class="grid grid-cols-2 gap-3"><div><label class="lbl">N&deg; Licence *</label><input type="text" id="cfLicence" required class="inp" placeholder="LT-2024-XXX"></div><div><label class="lbl">Validit&eacute; assurance *</label><input type="date" id="cfAssurDate" required class="inp"></div></div>
+        <div class="section-title">&#x1F69B; V&eacute;hicule</div>
+        <div class="grid grid-cols-2 gap-3"><div><label class="lbl">Immat. tracteur *</label><input type="text" id="cfImmatTracteur" required class="inp"></div><div><label class="lbl">Immat. remorque</label><input type="text" id="cfImmatRemorque" class="inp"></div></div>
+        <div class="section-title">&#x1F4DE; Contact 24/7</div>
+        <div><label class="lbl">T&eacute;l. urgence *</label><input type="tel" id="cfTel247" required class="inp"></div>
+        <button type="submit" class="w-full py-3.5 bg-purple-600 text-white rounded-xl font-bold hover:bg-purple-700 transition">&#x2705; Soumettre</button>
+    </form>
+</div></div>
+
+<!-- DEMANDE TRANSPORT — keeping ALL original IDs and structure -->
+<div id="demandeModal" class="modal"><div class="modal-content modal-xl" style="max-width:1100px;width:95vw;">
+    <div class="flex justify-between items-center mb-6"><h2 class="text-xl font-black text-slate-900">&#x1F4E6; Nouvelle demande de prise en charge</h2><button onclick="closeModal('demandeModal')" class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-400 transition">&times;</button></div>
+    <form onsubmit="handleDemande(event)">
+        <div class="grid md:grid-cols-2 gap-4 mb-4">
+            <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200">
+                <div class="section-title">&#x1F4E4; Exp&eacute;diteur</div>
+                <div class="space-y-2">
+                    <div><label class="lbl">Soci&eacute;t&eacute;</label><input type="text" id="dExpNom" class="inp bg-slate-100" readonly></div>
+                    <div class="grid grid-cols-2 gap-2"><div><label class="lbl">T&eacute;l&eacute;phone</label><input type="text" id="dExpTel" class="inp"></div><div><label class="lbl">Email</label><input type="text" id="dExpEmail" class="inp bg-slate-100" readonly></div></div>
+                    <div><label class="lbl">Adresse</label><input type="text" id="dExpAddr" class="inp"></div>
+                    <div class="grid grid-cols-2 gap-2"><div><label class="lbl">CP</label><input type="text" id="dExpCP" class="inp"></div><div><label class="lbl">Ville</label><input type="text" id="dExpVille" class="inp"></div></div>
+                </div>
+            </div>
+            <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200">
+                <div class="section-title">&#x1F69A; Enl&egrave;vement</div>
+                <div class="space-y-2">
+                    <label class="flex items-center gap-2 text-xs text-slate-500 cursor-pointer"><input type="checkbox" id="dEnlevDiff" onchange="toggleEnlevAdresse()"><span>Adresse diff&eacute;rente</span></label>
+                    <div id="enlevAdresseBloc" style="display:none;" class="space-y-2 border border-orange-300 rounded-xl p-3 bg-orange-50/50">
+                        <div><label class="lbl">Adresse</label><input type="text" id="dFromAddr" class="inp"></div>
+                        <div class="grid grid-cols-2 gap-2"><div><label class="lbl">CP</label><input type="text" id="dFromCP" class="inp"></div><div><label class="lbl">Ville</label><input type="text" id="dFromCity" class="inp"></div></div>
+                        <div><label class="lbl">Contact sur place</label><input type="text" id="dFromContact" class="inp"></div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2"><div><label class="lbl">Date *</label><input type="date" id="dDate" required class="inp"></div><div><label class="lbl">Heure</label><input type="time" id="dHeure" class="inp"></div></div>
+                    <div><label class="lbl">Type *</label><select id="dType" class="inp"><option value="Affr&egrave;tement">Affr&egrave;tement</option><option value="Messagerie">Messagerie</option><option value="Express">Express</option><option value="Groupage">Groupage</option><option value="Lots complets">Lots complets</option></select></div>
+                    <div><label class="lbl">Instructions</label><textarea id="dInstrEnlev" class="inp resize-none" rows="2" placeholder="Hayon, &eacute;tage..."></textarea></div>
+                </div>
+            </div>
+        </div>
+        <div class="grid md:grid-cols-2 gap-4 mb-4">
+            <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200">
+                <div class="section-title">&#x1F4E5; Destinataire</div>
+                <div class="space-y-2">
+                    <div class="grid grid-cols-3 gap-2"><div><label class="lbl">Code</label><input type="text" id="dDestCode" class="inp"></div><div class="col-span-2"><label class="lbl">Nom *</label><input type="text" id="dDestNom" required class="inp"></div></div>
+                    <div><label class="lbl">Adresse *</label><input type="text" id="dDestAddr1" required class="inp"></div>
+                    <div><input type="text" id="dDestAddr2" class="inp" placeholder="Ligne 2"></div>
+                    <div class="grid grid-cols-3 gap-2"><div><label class="lbl">CP *</label><input type="text" id="dDestCP" required class="inp"></div><div class="col-span-2"><label class="lbl">Ville *</label><input type="text" id="dDestVille" required class="inp"></div></div>
+                    <div class="grid grid-cols-2 gap-2"><div><label class="lbl">T&eacute;l</label><input type="tel" id="dDestTel" class="inp"></div><div><label class="lbl">Contact</label><input type="text" id="dDestContact" class="inp"></div></div>
+                </div>
+            </div>
+            <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200">
+                <div class="section-title">&#x1F4CD; Livraison</div>
+                <div class="space-y-2">
+                    <div class="grid grid-cols-2 gap-2"><div><label class="lbl">Date souhait&eacute;e</label><input type="date" id="dDateLiv" class="inp"></div><div><label class="lbl">Heure</label><input type="time" id="dHeureLiv" class="inp"></div></div>
+                    <div><label class="lbl">R&eacute;f. client</label><input type="text" id="dRefClient" class="inp"></div>
+                    <div class="grid grid-cols-2 gap-2"><div><label class="lbl">N&deg; B.L.</label><input type="text" id="dNumBL" class="inp"></div><div><label class="lbl">R&eacute;f. dest.</label><input type="text" id="dRefDest" class="inp"></div></div>
+                    <div><label class="lbl">Instructions livraison</label><textarea id="dInstrLiv" class="inp resize-none" rows="2"></textarea></div>
+                </div>
+            </div>
+        </div>
+        <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200 mb-4">
+            <div class="section-title">&#x1F4E6; D&eacute;tail marchandises</div>
+            <div style="overflow-x:auto;">
+                <table class="w-full border-collapse text-xs" id="marchandisesTable" style="min-width:800px;">
+                    <thead><tr class="bg-slate-800 text-white text-center">
+                        <th class="border border-slate-600 p-1.5" style="width:50px">Qt&eacute;</th>
+                        <th class="border border-slate-600 p-1.5" style="width:95px">Type</th>
+                        <th class="border border-slate-600 p-1.5" style="min-width:170px">Nature</th>
+                        <th class="border border-slate-600 p-1.5" style="width:80px">Poids kg</th>
+                        <th class="border border-slate-600 p-1.5" style="width:80px">Long.</th>
+                        <th class="border border-slate-600 p-1.5" style="width:80px">Larg.</th>
+                        <th class="border border-slate-600 p-1.5" style="width:80px">Haut.</th>
+                        <th class="border border-slate-600 p-1.5" style="width:80px">Vol. m&sup3;</th>
+                        <th class="border border-slate-600 p-1.5" style="width:30px"></th>
+                    </tr></thead>
+                    <tbody id="marchandisesBody">
+                        <tr>
+                            <td class="border border-slate-200 p-1"><input type="number" class="inp text-xs text-center w-full m-um" value="1" min="1" oninput="calcTotaux()"></td>
+                            <td class="border border-slate-200 p-1"><select class="inp text-xs w-full m-type"><option>Palette</option><option>Caisse</option><option>Carton</option><option>Roll</option><option>F&ucirc;t</option><option>Sac</option><option>Vrac</option><option>Autre</option></select></td>
+                            <td class="border border-slate-200 p-1"><input type="text" class="inp text-xs w-full m-desc" placeholder="Description"></td>
+                            <td class="border border-slate-200 p-1"><input type="number" class="inp text-xs text-center w-full m-poids" value="0" step="0.1" min="0" oninput="calcTotaux()"></td>
+                            <td class="border border-slate-200 p-1"><input type="number" class="inp text-xs text-center w-full m-long" value="0" step="0.01" min="0" oninput="calcVolume(this)"></td>
+                            <td class="border border-slate-200 p-1"><input type="number" class="inp text-xs text-center w-full m-larg" value="0" step="0.01" min="0" oninput="calcVolume(this)"></td>
+                            <td class="border border-slate-200 p-1"><input type="number" class="inp text-xs text-center w-full m-haut" value="0" step="0.01" min="0" oninput="calcVolume(this)"></td>
+                            <td class="border border-slate-200 p-1"><input type="number" class="inp text-xs text-center w-full m-vol" value="0" readonly></td>
+                            <td class="border border-slate-200 p-1 text-center"><button type="button" onclick="supprimerLigneMarch(this)" class="text-red-500 hover:text-red-700 font-bold text-lg">&times;</button></td>
+                        </tr>
+                    </tbody>
+                    <tfoot><tr class="bg-slate-100 font-bold text-center text-slate-800">
+                        <td class="border border-slate-200 p-1.5" id="totalUM">1</td>
+                        <td class="border border-slate-200 p-1.5" colspan="2">TOTAUX</td>
+                        <td class="border border-slate-200 p-1.5" id="totalPoids">0</td>
+                        <td class="border border-slate-200 p-1.5" colspan="3"></td>
+                        <td class="border border-slate-200 p-1.5" id="totalVol">0</td>
+                        <td class="border border-slate-200 p-1.5"></td>
+                    </tr></tfoot>
+                </table>
+            </div>
+            <button type="button" onclick="ajouterLigneMarch()" class="mt-3 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-2 px-4 rounded-xl transition">+ Ajouter ligne</button>
+        </div>
+        <div class="grid md:grid-cols-2 gap-4 mb-4">
+            <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200">
+                <div class="section-title">&#x1F4B0; Valeur</div>
+                <div class="grid grid-cols-2 gap-2"><div><label class="lbl">Valeur d&eacute;clar&eacute;e</label><input type="number" id="dValeur" step="0.01" min="0" value="0" class="inp"></div><div><label class="lbl">Devise</label><select id="dDevise" class="inp"><option value="EUR">EUR &euro;</option><option value="USD">USD $</option><option value="GBP">GBP &pound;</option></select></div></div>
+            </div>
+            <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200">
+                <div class="section-title">&#x1F4DD; Instructions</div>
+                <div class="space-y-2"><div><label class="lbl">Instructions</label><textarea id="dInstructions" rows="2" class="inp resize-none"></textarea></div><div><label class="lbl">Remarques</label><textarea id="dRemarques" rows="2" class="inp resize-none"></textarea></div></div>
+            </div>
+        </div>
+        <button type="submit" class="w-full py-4 bg-gradient-to-r from-emerald-600 to-emerald-700 text-white rounded-xl font-bold text-lg shadow-lg shadow-emerald-600/25 hover:-translate-y-0.5 transition-all">&#x2705; Soumettre la demande</button>
+    </form>
+</div></div>
+
+<!-- DEVIS -->
+<div id="devisModal" class="modal"><div class="modal-content modal-lg">
+    <div class="flex justify-between items-center mb-6"><h2 class="text-xl font-black text-slate-900">&#x1F4B0; Propositions de devis</h2><button onclick="closeModal('devisModal')" class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-400 transition">&times;</button></div>
+    <p id="devisSub" class="text-sm text-slate-500 mb-4"></p>
+    <div id="devisCards" class="grid md:grid-cols-3 gap-4"></div>
+</div></div>
+
+<!-- OFFER -->
+<div id="offerModal" class="modal"><div class="modal-content">
+    <div class="flex justify-between items-center mb-6"><h2 class="text-xl font-black text-slate-900">&#x1F4DD; Soumettre une offre</h2><button onclick="closeModal('offerModal')" class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-400 transition">&times;</button></div>
+    <div id="offerInfo" class="mb-4 p-4 bg-slate-50 rounded-xl border border-slate-200 text-sm"></div>
+    <form onsubmit="submitOffer(event)" class="space-y-3">
+        <div><label class="lbl">Prix HT (&euro;) *</label><input type="number" id="ofPrix" required step="0.01" class="inp"></div>
+        <div class="grid grid-cols-2 gap-3"><div><label class="lbl">Date PEC *</label><input type="date" id="ofDatePEC" required class="inp"></div><div><label class="lbl">Heure PEC *</label><input type="time" id="ofHeurePEC" required class="inp"></div></div>
+        <div class="grid grid-cols-2 gap-3"><div><label class="lbl">Date livraison *</label><input type="date" id="ofDateLiv" required class="inp"></div><div><label class="lbl">Heure livraison *</label><input type="time" id="ofHeureLiv" required class="inp"></div></div>
+        <div><label class="lbl">Chauffeur</label><select id="ofChauffeur" class="inp"></select></div>
+        <button type="submit" class="w-full py-3 bg-gradient-to-r from-emerald-600 to-emerald-700 text-white rounded-xl font-bold shadow-lg shadow-emerald-600/25 transition-all">&#x2705; Envoyer l'offre</button>
+    </form>
+</div></div>
+
+<!-- COMPOSE -->
+<div id="composeModal" class="modal"><div class="modal-content modal-lg">
+    <div class="flex justify-between items-center mb-6"><h2 class="text-xl font-black text-slate-900">&#x1F4E8; Composer un devis</h2><button onclick="closeModal('composeModal')" class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-400 transition">&times;</button></div>
+    <div id="composeInfo" class="mb-3 p-4 bg-slate-50 rounded-xl border border-slate-200 text-sm"></div>
+    <div id="composeOffres" class="mb-4"></div>
+    <div id="composeFields" class="space-y-3 mb-4"></div>
+    <div class="flex gap-2"><button id="addDevisBtn" onclick="addDevisRow()" class="px-4 py-2.5 bg-slate-100 rounded-xl text-xs font-bold hover:bg-slate-200 transition">+ Proposition</button><button onclick="sendDevis()" class="px-6 py-2.5 bg-blue-600 text-white rounded-xl font-bold text-sm shadow-lg shadow-blue-600/25 transition-all">&#x1F4E8; Envoyer</button></div>
+</div></div>
+
+<!-- UPLOAD -->
+<div id="uploadModal" class="modal"><div class="modal-content">
+    <div class="flex justify-between items-center mb-6"><h2 class="text-xl font-black text-slate-900">&#x1F4F7; Preuve de livraison</h2><button onclick="closeModal('uploadModal')" class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-400 transition">&times;</button></div>
+    <div id="uploadS1">
+        <p class="text-sm text-slate-500 mb-3">Mission: <strong id="uploadRef"></strong></p>
+        <div><label class="lbl">Signataire</label><input type="text" id="signataire" class="inp" placeholder="Nom du r&eacute;ceptionnaire"></div>
+        <div class="mt-3"><label class="lbl">Photo(s) *</label><input type="file" id="photoInput" accept="image/*" multiple onchange="previewPhotos(event)" class="inp"></div>
+        <div id="photoPreview" class="grid grid-cols-3 gap-2 mt-3"></div>
+        <button onclick="submitDelivery()" class="w-full mt-4 py-3 bg-gradient-to-r from-emerald-600 to-emerald-700 text-white rounded-xl font-bold shadow-lg transition-all">&#x2705; Soumettre</button>
+    </div>
+    <div id="uploadS2" class="hidden text-center py-8">
+        <div class="text-5xl mb-3">&#x2705;</div><h3 class="text-xl font-bold text-green-600 mb-2">Livraison soumise !</h3><p class="text-sm text-slate-500">En attente de validation.</p>
+        <button onclick="closeModal('uploadModal')" class="mt-4 px-6 py-2.5 bg-slate-100 rounded-xl text-sm font-bold hover:bg-slate-200 transition">Fermer</button>
+    </div>
+</div></div>
+
+<!-- REJECT -->
+<div id="rejectModal" class="modal"><div class="modal-content">
+    <div class="flex justify-between items-center mb-6"><h2 class="text-xl font-black text-slate-900">&#x274C; Rejeter</h2><button onclick="closeModal('rejectModal')" class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-400 transition">&times;</button></div>
+    <div class="mb-3"><label class="lbl">Motif *</label><textarea id="rejectMotif" rows="3" class="inp resize-none" required placeholder="D&eacute;crivez..."></textarea></div>
+    <button onclick="confirmReject()" class="w-full py-3 bg-red-600 text-white rounded-xl font-bold hover:bg-red-700 transition">Confirmer le rejet</button>
+</div></div>
+
+<!-- CHAUFFEUR -->
+<div id="chauffeurModal" class="modal"><div class="modal-content">
+    <div class="flex justify-between items-center mb-6"><h2 class="text-xl font-black text-slate-900">&#x1F464; Ajouter un chauffeur</h2><button onclick="closeModal('chauffeurModal')" class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-400 transition">&times;</button></div>
+    <form onsubmit="addChauffeur(event)" class="space-y-3">
+        <div class="grid grid-cols-2 gap-3"><div><label class="lbl">Pr&eacute;nom *</label><input type="text" id="chPrenom" required class="inp"></div><div><label class="lbl">Nom *</label><input type="text" id="chNom" required class="inp"></div></div>
+        <div><label class="lbl">N&deg; Permis *</label><input type="text" id="chPermis" required class="inp"></div>
+        <div class="grid grid-cols-2 gap-3"><div><label class="lbl">Cat&eacute;gorie</label><input type="text" id="chCategorie" class="inp" value="CE"></div><div><label class="lbl">Validit&eacute;</label><input type="date" id="chValidite" class="inp"></div></div>
+        <div><label class="lbl">T&eacute;l&eacute;phone</label><input type="tel" id="chTel" class="inp"></div>
+        <button type="submit" class="w-full py-3 bg-gradient-to-r from-emerald-600 to-emerald-700 text-white rounded-xl font-bold shadow-lg transition-all">&#x2705; Ajouter</button>
+    </form>
+</div></div>
+
+<!-- DOC VIEWER -->
+<div id="docModal" class="modal"><div class="modal-content modal-xxl">
+    <div class="flex justify-between items-center mb-4 no-print">
+        <h2 class="text-xl font-black text-slate-900">Document</h2>
+        <div class="flex gap-2"><button onclick="window.print()" class="px-4 py-2 bg-slate-800 text-white rounded-xl text-sm font-bold hover:bg-slate-900 transition">&#x1F5A8;&#xFE0F; Imprimer</button><button onclick="closeModal('docModal')" class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-400 transition">&times;</button></div>
+    </div>
+    <div id="docContent"></div>
+</div></div>
+
+<!-- ROLE EDITOR -->
+<div id="roleModal" class="modal"><div class="modal-content">
+    <div class="flex justify-between items-center mb-6"><h2 class="text-xl font-black text-slate-900">&#x2699;&#xFE0F; G&eacute;rer les r&ocirc;les</h2><button onclick="closeModal('roleModal')" class="w-8 h-8 rounded-lg bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-400 transition">&times;</button></div>
+    <div id="roleUserInfo" class="mb-4 p-4 bg-slate-50 rounded-xl border border-slate-200 text-sm"></div>
+    <div id="roleCheckboxes" class="space-y-3 mb-4"></div>
+    <button onclick="saveRoles()" class="w-full py-3 bg-blue-600 text-white rounded-xl font-bold shadow-lg shadow-blue-600/25 transition-all">&#x1F4BE; Enregistrer</button>
+</div></div>
+
+<!-- ════════════════════════════════════════════════════════
+     SCRIPTS
+     ════════════════════════════════════════════════════════ -->
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+<script src="js/firebase-config.js"></script>
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+<script src="js/expediteurs.js"></script>
+<script src="js/transporteur.js"></script>
+<script src="js/admin.js"></script>
+<script src="validators.js"></script>
+<script src="js/documents.js"></script>
+<script src="js/suivi.js"></script>
+<script src="js/footer.js"></script>
+
+</body>
+</html>
