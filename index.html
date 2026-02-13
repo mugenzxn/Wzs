@@ -409,15 +409,11 @@
             <div class="bg-slate-50 rounded-2xl p-4 border border-slate-200">
                 <div class="section-title">&#x1F69A; Enl&egrave;vement</div>
                 <div class="space-y-2">
-                    <label class="flex items-center gap-2 text-xs text-slate-500 cursor-pointer"><input type="checkbox" id="dEnlevDiff" onchange="toggleEnlevAdresse()"><span>Adresse diff&eacute;rente</span></label>
-                    <div id="enlevAdresseBloc" style="display:none;" class="space-y-2 border border-orange-300 rounded-xl p-3 bg-orange-50/50">
-                        <div><label class="lbl">Adresse</label><input type="text" id="dFromAddr" class="inp"></div>
-                        <div class="grid grid-cols-2 gap-2"><div><label class="lbl">CP</label><input type="text" id="dFromCP" class="inp"></div><div><label class="lbl">Ville</label><input type="text" id="dFromCity" class="inp"></div></div>
-                        <div><label class="lbl">Contact sur place</label><input type="text" id="dFromContact" class="inp"></div>
-                    </div>
+                    <div><label class="lbl">Ville d'enl&egrave;vement *</label><input type="text" id="dFromCity" required class="inp" placeholder="Ex: Paris, Lyon..."></div>
+                    <div><label class="lbl">Adresse</label><input type="text" id="dFromAddr" class="inp" placeholder="Adresse compl&egrave;te"></div>
                     <div class="grid grid-cols-2 gap-2"><div><label class="lbl">Date *</label><input type="date" id="dDate" required class="inp"></div><div><label class="lbl">Heure</label><input type="time" id="dHeure" class="inp"></div></div>
                     <div><label class="lbl">Type *</label><select id="dType" class="inp"><option value="Affr&egrave;tement">Affr&egrave;tement</option><option value="Messagerie">Messagerie</option><option value="Express">Express</option><option value="Groupage">Groupage</option><option value="Lots complets">Lots complets</option></select></div>
-                    <div><label class="lbl">Instructions</label><textarea id="dInstrEnlev" class="inp resize-none" rows="2" placeholder="Hayon, &eacute;tage..."></textarea></div>
+                    <div><label class="lbl">Instructions</label><textarea id="dInstructions" class="inp resize-none" rows="2" placeholder="Hayon, &eacute;tage..."></textarea></div>
                 </div>
             </div>
         </div>
@@ -589,7 +585,8 @@
 <script src="js/expediteurs.js"></script>
 <script src="js/transporteur.js"></script>
 <script src="js/admin.js"></script>
-<script src="validators.js"></script>
+<script src="js/validators.js"></script>
+<script src="js/DataStore.js"></script>
 <script src="js/documents.js"></script>
 <script src="js/suivi.js"></script>
 <script src="js/footer.js"></script>

@@ -223,22 +223,7 @@ function handleDemande(e) {
     }
 
     // ══════════════════════════════════
-    // 4. ADRESSE ENLEVEMENT DIFFERENTE
-    // ══════════════════════════════════
-    let enlevDiff = null;
-    if (document.getElementById('dEnlevDiff')?.checked) {
-        enlevDiff = {
-            nom: document.getElementById('dEnlevNom')?.value || '',
-            addr: document.getElementById('dEnlevAddr')?.value || '',
-            cp: document.getElementById('dEnlevCP')?.value || '',
-            ville: document.getElementById('dEnlevVille')?.value || '',
-            tel: document.getElementById('dEnlevTel')?.value || '',
-            contact: document.getElementById('dEnlevContact')?.value || ''
-        };
-    }
-
-    // ══════════════════════════════════
-    // 5. CONSTRUCTION OBJET DEMANDE
+    // 4. CONSTRUCTION OBJET DEMANDE
     // ══════════════════════════════════
     const m = {
         ref: 'WASL-' + Date.now().toString().slice(-6),
@@ -262,7 +247,6 @@ function handleDemande(e) {
         fromCity: fc,
         fromAddr: document.getElementById('dFromAddr')?.value || '',
         dateEnlev: document.getElementById('dDate').value,
-        enlevDiff: enlevDiff,
 
         // Destinataire
         dest: {
@@ -361,15 +345,6 @@ function openDemande() {
     // ══════════════════════════════════
     document.getElementById('dFromCity').value = '';
     document.getElementById('dFromAddr').value = '';
-    document.getElementById('dEnlevDiff').checked = false;
-    document.getElementById('enlevAdresseBloc').style.display = 'none';
-
-    // Reset champs adresse enlèvement différente (si ils existent)
-    const enlevFields = ['dEnlevAddr', 'dEnlevCP', 'dEnlevVille', 'dEnlevContact', 'dEnlevTel'];
-    enlevFields.forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.value = '';
-    });
 
     // ══════════════════════════════════
     // 3. RESET DESTINATAIRE
@@ -564,13 +539,7 @@ function calcTotaux() {
     document.getElementById('totalPoids').textContent = totalPoids.toFixed(1);
     document.getElementById('totalVol').textContent = totalVol.toFixed(3);
 }
-// ============================================
-// TOGGLE ADRESSE ENLEVEMENT DIFFERENTE
-// ============================================
-function toggleEnlevAdresse() {
-    const checked = document.getElementById('dEnlevDiff').checked;
-    document.getElementById('enlevAdresseBloc').style.display = checked ? 'block' : 'none';
-}
+
 /* ========================================================
    PAGE PROFIL — Ouvrir / Charger / Sauvegarder
    ======================================================== */
